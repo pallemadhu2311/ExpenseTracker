@@ -34,12 +34,14 @@ import { LoginService } from '../services/login.service';
 })
 export class LoginComponent {
   loginForm: any;
+  userData = [];
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private loginService:LoginService
+    private loginService:LoginService,
+    private userService:UserService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -60,6 +62,8 @@ export class LoginComponent {
         (response: any) => {
           if (response && response.message === 'Login Successful') {
             alert('Login successful');
+            this.storeUsername(username);
+            this.fetchAndStoreUserDetails(username);
             this.router.navigate(['home/addexpenses']); // Adjust the route as needed
           } else {
             alert('Unexpected response from server');
@@ -74,4 +78,21 @@ export class LoginComponent {
     }
 
   }
+
+  private storeUsername(username: string): void {
+    localStorage.setItem('LoggedInUser', username);
+  }
+
+  private fetchAndStoreUserDetails(username:string):void{
+    this.loginService.getUserByUsername(username).subscribe((response:any)=>{
+      this.userData = response;
+      localStorage.setItem('_UserData_', JSON.stringify(response));
+    },(error)=>{
+      console.error('Error While Fetching the User',error);
+    })
+  }
+
+
+
+
 }

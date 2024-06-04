@@ -1,12 +1,16 @@
 <mat-toolbar>
   <span>Expense Tracker</span>
   <span class="spacer"></span>
-  <!-- <button mat-raised-button routerLink="home/expenses">Expenses</button>&nbsp; -->
-  <button mat-button routerLink="home/addexpenses">Add Expense</button>&nbsp;
-  <button mat-button routerLink="home/summary">Summary</button>&nbsp;
-  <button mat-button routerLink="login">Login</button>&nbsp;
-  <button mat-button routerLink="signup">SignUp</button>&nbsp;
-
-  <button mat-button >Logout</button>&nbsp;
+  <button mat-button routerLink="home/addexpenses" *ngIf="isUserLoggedIn">Add Expense</button>&nbsp;
+  <button mat-button routerLink="home/summary" *ngIf="isUserLoggedIn">Summary</button>&nbsp;
+  <button mat-button routerLink="login" *ngIf="!isUserLoggedIn">Login</button>&nbsp;
+  <button mat-button routerLink="signup" *ngIf="!isUserLoggedIn">SignUp</button>&nbsp;
+  <button mat-button (click)="logout()" *ngIf="isUserLoggedIn">Logout</button>&nbsp;
 </mat-toolbar>
+<!--
+if user details found in the localstorage we will enable the isUserLoggedIn flag
+if user is logged in we need to enable only (Add Expense , summary , Logout).
+
+If user is not logged in we need show only (Login , Signup pages )
+-->
 
