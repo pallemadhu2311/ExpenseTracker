@@ -1,0 +1,49 @@
+<mat-card>
+  <mat-card-title>Signup</mat-card-title><hr>
+  <mat-card-content>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" required>
+        <!-- <mat-error *ngIf="signupForm.get('username')?.invalid">username is required</mat-error> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Full Name</mat-label>
+        <input matInput formControlName="fullname" required>
+        <!-- <mat-error *ngIf="signupForm.get('fullname')?.invalid">Full Name is required</mat-error> -->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" required>
+        <!-- <mat-error *ngIf="signupForm.get('email')?.invalid">
+          <span *ngIf="signupForm.get('email')?.errors?.['required']">Email is required</span>
+          <span *ngIf="signupForm.get('email')?.errors?.['email']">Invalid email</span>
+        </mat-error> -->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" required>
+        <!-- <mat-error *ngIf="signupForm.get('password')?.invalid">
+          <span *ngIf="signupForm.get('password')?.errors?.['required']">Password is required</span>
+          <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+        </mat-error> -->
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Mobile</mat-label>
+        <input matInput formControlName="mobile" required>
+        <!-- <mat-error *ngIf="signupForm.get('mobile')?.invalid">
+          <span *ngIf="signupForm.get('mobile')?.errors?.['required']">Mobile Number is required</span>
+          <span *ngIf="signupForm.get('mobile')?.errors?.['maxLength']">Invalid Mobile Number</span>
+        </mat-error> -->
+      </mat-form-field>
+
+      <br>
+      <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid">Sign Up</button> &nbsp;&nbsp;
+      <button mat-raised-button color="accent" type="submit" [routerLink]="['/login']" >Login</button>
+    </form>
+  </mat-card-content>
+</mat-card>
