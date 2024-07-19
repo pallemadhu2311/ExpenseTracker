@@ -1,0 +1,78 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+}
+
+.input-section,
+.transaction-section {
+  flex: 1 1 100%;
+  box-sizing: border-box;
+}
+
+.input-card,
+.transaction-card {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 0px 0px #888888;
+}
+
+mat-card-title {
+  font-weight: 200;
+  font-size: 1.5em;
+}
+
+mat-form-field {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.example-left-align {
+  width: 100%;
+  padding: 25px;
+  font-size: 30px;
+}
+
+.matInput {
+  font-size: 30px;
+}
+
+.symbol-size {
+  font-size: 30px;
+  font-weight: 200;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  .input-section {
+    flex: 0 0 40%;
+  }
+
+  .transaction-section {
+    flex: 0 0 58%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .input-section {
+    flex: 0 0 40%;
+  }
+
+  .transaction-section {
+    flex: 0 0 58%;
+  }
+
+
+
+}
+
+h3{
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+  /* background-color: cadetblue; */
+}
+

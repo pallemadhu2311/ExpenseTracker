@@ -1,0 +1,23 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+span {
+  font-weight: 400;
+  color: white;
+  font-family: "Caveat", cursive;
+  font-optical-sizing: auto;
+  font-size: 34px;
+
+}
+
+button {
+  font-weight: 400;
+
+
+}
+
+mat-toolbar {
+  background-image: linear-gradient(to right top, #7b9ed2, #69abdf, #52b8e7, #35c5ec, #12d2eb);
+  color: white;
+}
