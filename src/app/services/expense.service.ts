@@ -1,30 +1,23 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {  ExpenseModel } from '../models/Expense.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ExpenseModel } from '../models/Expense.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
 
-  private baseUrl = 'http://localhost:8080/api/expenses';
+  private baseUrl = 'http://localhost:8080/expenses';
 
-  constructor(private http:HttpClient) {
+  constructor(private http: HttpClient) { }
 
+  addExpense(expense: ExpenseModel): Observable<any> {  // Change to Observable<any> to handle text response
+    return this.http.post<any>(`${this.baseUrl}`, expense, { responseType: 'text' as 'json' });
   }
 
-  addExpense(expense : ExpenseModel):Observable<ExpenseModel>{
-    return this.http.post<ExpenseModel>(this.baseUrl, expense);
+  getExpenses(username: string): Observable<ExpenseModel[]> {
+    let params = new HttpParams().set('username', username);
+    return this.http.get<ExpenseModel[]>(`${this.baseUrl}`, { params });
   }
-
-  getExpenses(): Observable<ExpenseModel[]> {
-    return this.http.get<ExpenseModel[]>(this.baseUrl);
-  }
-
-
-
-
-
-
 }

@@ -2,7 +2,9 @@
   <span>Expense Tracker</span>
   <span class="spacer"></span>
   <button mat-button routerLink="home/addexpenses" *ngIf="isUserLoggedIn">Add Expense</button>&nbsp;
+  <button mat-button routerLink="home/transaction-details" *ngIf="isUserLoggedIn">Transaction Details</button>&nbsp;
   <button mat-button routerLink="home/summary" *ngIf="isUserLoggedIn">Summary</button>&nbsp;
+
   <button mat-button routerLink="login" *ngIf="!isUserLoggedIn">Login</button>&nbsp;
   <button mat-button routerLink="signup" *ngIf="!isUserLoggedIn">SignUp</button>&nbsp;
   <button mat-button (click)="logout()" *ngIf="isUserLoggedIn">Logout</button>&nbsp;

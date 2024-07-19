@@ -68,3 +68,11 @@ mat-form-field {
 
 
 }
+
+h3{
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+  /* background-color: cadetblue; */
+}
+

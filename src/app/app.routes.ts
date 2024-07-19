@@ -4,6 +4,7 @@ import { AddExpensesComponent } from './home/add-expenses/add-expenses.component
 import { SummaryComponent } from './home/summary/summary.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { TransactionDetailsComponent } from './home/transaction-details/transaction-details.component';
 
 export const routes: Routes = [
   // { path: '', redirectTo: '/home/addexpenses', pathMatch: 'full' },
@@ -18,6 +19,9 @@ export const routes: Routes = [
   },
   {
     path: 'home/addexpenses', component: AddExpensesComponent
+  },
+  {
+    path:'home/transaction-details', component:TransactionDetailsComponent
   },
   {
     path: 'home/summary', component: SummaryComponent

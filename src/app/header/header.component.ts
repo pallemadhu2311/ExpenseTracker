@@ -55,7 +55,7 @@ export class HeaderComponent {
       this.isUserLoggedIn = !!userProfile;
       this.cd.detectChanges();
       if(userProfile){
-        alert("User Available");
+        // alert("User Available");
         this.isUserLoggedIn = true;
         console.log("Is user Logged In : " , this.isUserLoggedIn);
       }

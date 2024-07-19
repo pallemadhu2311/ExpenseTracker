@@ -1,30 +1,27 @@
-import { Component } from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
+import { Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatTableModule} from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Time } from '@angular/common';
 import { ExpenseService } from '../../services/expense.service';
 import { ExpenseModel } from '../../models/Expense.model';
+import { response } from 'express';
+import { DialogComponent } from '../dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
-
-interface Expense {
-  dateTime: Date;
-  amount: number;
-  note: string;
-}
 @Component({
   selector: 'app-add-expenses',
   standalone: true,
-  imports: [MatCardModule,
-
+  imports: [
+    MatCardModule,
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
@@ -34,100 +31,89 @@ interface Expense {
     MatTableModule,
     FormsModule,
     CommonModule
-
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './add-expenses.component.html',
-  styleUrl: './add-expenses.component.css'
+  styleUrls: ['./add-expenses.component.css']
 })
-export class AddExpensesComponent {
+export class AddExpensesComponent implements OnInit {
 
-  expenses: Expense[] = [];
-  displayedColumns: string[] = ['dateTime', 'amount', 'note'];
-  currentDate: Date = new Date();
-  currentTime: string = this.currentDate.toTimeString().slice(0, 5); // Format as HH:MM
-  username: string = '';
-  AllExpenses: ExpenseModel[] = [];
+  currentDate!: Date;
+  currentTime!: string;
+  amount : number = 0;
+  note : string= "";
+  username : string="";
+
+  expenses:ExpenseModel[]=[];
 
 
-  constructor(private expenseService : ExpenseService){
-
-  }
-
-  ngOnInit():void{
-    this.loadUsername();
+  constructor(private expenseService:ExpenseService, private dialog:MatDialog){
 
   }
 
-  loadUsername() {
-    if (typeof localStorage !== 'undefined') {
-      const userProfile = localStorage.getItem('_UserData_');
-      if (userProfile) {
-        try {
-          const user = JSON.parse(userProfile);
-          this.username = user.username;
-        } catch (error) {
-          console.error('Error parsing user profile from localStorage', error);
-        }
-      } else {
-        //console.error('No user profile found in localStorage');
-      }
-    } else {
-     // console.error('localStorage is not defined');
-    }
+  ngOnInit(): void {
+    this.setCurrentDateTime();
+    this.fetchExpenses();
+
+    const user = localStorage.getItem("LoggedInUser") || "No-User";
+    this.username = user;
   }
 
-  addExpense(expense: ExpenseModel) {
-    this.expenseService.addExpense(expense).subscribe((newExpense:any) => {
-        this.expenses.push(newExpense);
-        console.log('Expense added successfully', newExpense);
-      },
-      (error) => {
-        console.error('Error adding expense', error);
-      }
-    );
+  setCurrentDateTime() {
+    const now = new Date();
+    this.currentDate = now;
+    this.currentTime = now.toTimeString().split(' ')[0]; // Format to HH:mm:ss
   }
 
   onSubmit(form: NgForm) {
-    const { date, time, amount, note } = form.value;
-    const dateTime = new Date(date);
-    const [hours, minutes] = time.split(':').map(Number);
-    dateTime.setHours(hours);
-    dateTime.setMinutes(minutes);
+    if (form.valid) {
+      const username = localStorage.getItem('LoggedInUser') || 'defaultUser';
 
-    const transactionId = this.generateTransactionId();
-    const expense: ExpenseModel = {
-      transactionId,
-      date: dateTime,
-      time,
-      amount: parseFloat(amount),
-      note,
-      username: this.username
-    };
+      console.log('Form values:', {
+        date: this.currentDate,
+        time: this.currentTime,
+        amount: this.amount,
+        note: this.note,
+        username: this.username || 'default',
+        transactionId: ''
+      });
 
-    this.addExpense(expense);
-    alert('Submitted Successfully');
-    form.resetForm({
-      date: this.currentDate,
-      time: this.currentTime,
+      const newExpense: ExpenseModel = {
+        date: this.currentDate,
+        time: this.currentTime,
+        amount: this.amount,
+        note: this.note,
+        username: this.username || 'default',
+        transactionId: ''
+      };
+
+      this.expenseService.addExpense(newExpense).subscribe(response => {
+        console.log("Expense Added Successfully");
+        console.log('Response:', response); // Handle the text response
+        this.fetchExpenses();
+        form.resetForm();
+        this.dialog.open(DialogComponent);
+        this.setCurrentDateTime();
+      }, error => {
+        console.error('Error adding expense:', error);
+      });
+    }
+  }
+
+
+  fetchExpenses() {
+    const username = localStorage.getItem('LoggedInUser') || 'defaultUser';
+    this.expenseService.getExpenses(username).subscribe(data => {
+      this.expenses = data
+        .map(expense => ({
+          ...expense,
+          dateTime: new Date(`${expense.date}T${expense.time}`)
+        }))
+        .sort((a, b) => b.dateTime.getTime() - a.dateTime.getTime())
+        .slice(0, 8); // Sort by date and time in descending order and get the latest 8
     });
   }
 
-  generateTransactionId(): string {
-    return '#' + Math.floor(Math.random() * 1000000).toString().padStart(7, '0');
-  }
-
-
-  loadExpenses() {
-    this.expenseService.getExpenses().subscribe(
-      (expenses: ExpenseModel[]) => {
-        this.AllExpenses = expenses;
-      },
-      (error) => {
-        console.error('Error loading expenses', error);
-      }
-    );
-  }
 
 
 
